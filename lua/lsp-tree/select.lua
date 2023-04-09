@@ -25,16 +25,16 @@ M.select_range = function(keymap_mode, range)
 end
 
 local function call_method(method_name)
-    local method = M.selections[method_name]
+    local method = M.methods[method_name]
     if not method then
-        return nil, "call_method: select method was not found"
+        return nil, string.format("call_method: selection method was not found: %s", method_name)
     end
 
     return method()
 end
 
 M.select_from_method = function(keymap_mode, method_name)
-    local range, err = call_selection(method_name)
+    local range, err = call_method(method_name)
     if range then
         return M.select_range(keymap_mode, range)
     else
@@ -44,8 +44,8 @@ end
 
 local map_opts = { silent = true, noremap = true }
 M.buf_map_method = function(bufnr, key, method_name)
-    api.nvim_buf_set_keymap(bufnr, 'x', key, string.format(":lua require'lsp-tree'.select.select_from_selection('x', '%s')<CR>", selection_name), map_opts)
-    api.nvim_buf_set_keymap(bufnr, 'o', key, string.format(":lua require'lsp-tree'.select.select_from_selection('o', '%s')<CR>", selection_name), map_opts)
+    api.nvim_buf_set_keymap(bufnr, 'x', key, string.format(":lua require'lsp-tree'.select.select_from_method('x', '%s')<CR>", method_name), map_opts)
+    api.nvim_buf_set_keymap(bufnr, 'o', key, string.format(":lua require'lsp-tree'.select.select_from_method('o', '%s')<CR>", method_name), map_opts)
 end
 
 return M

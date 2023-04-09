@@ -14,7 +14,7 @@ local M = setmetatable({}, {
 })
 
 M.on_attach = function(_, bufnr)
-    require'lsp-tree.select'.buf_map_method('af', 'outer_function')
+    require'lsp-tree.select'.buf_map_method(bufnr, 'af', 'outer_function')
 end
 
 M.setup = function()
